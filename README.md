@@ -10,3 +10,4 @@ A simple Python project to demonstrate Jenkins automation.
 
 ## Run
 python3 app.py
+Testing GitHub webhook integration with Jenkins.
