@@ -8,3 +8,5 @@ print("Automatic Jenkins Pipeline Trigger Test")
 print("NEW CODE: Testing Git synchronization issue")
 
 print("DEV BRANCH: Testing branch mismatch in Jenkins")
+
+print("Jenkins is now monitoring the DEV branch!")
