@@ -19,6 +19,9 @@ pipeline {
             steps {
                 echo 'Running Python unit tests'
                 sh 'python3 -m unittest -v'
+
+                echo 'Simulating a build failure for troubleshooting'
+                sh 'exit 1'
             }
         }
     }
