@@ -8,18 +8,24 @@ pipeline {
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                sh 'python3 -m venv .venv'
+                sh '.venv/bin/pip install --upgrade pip'
+                sh '.venv/bin/pip install -r requirements.txt'
+            }
+        }
+
         stage('Build') {
             steps {
-                echo 'Building Python application'
-                sh 'python3 app.py'
+                sh '.venv/bin/python -m py_compile app.py'
+                echo 'Application build completed'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running Python unit tests'
-                sh 'python3 -m unittest -v'
-
+                sh '.venv/bin/python -m unittest -v'
             }
         }
     }

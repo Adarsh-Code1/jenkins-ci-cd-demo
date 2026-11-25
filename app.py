@@ -1,12 +1,62 @@
-def greet(name):
-    return f"Hello, {name}! Welcome to Jenkins CI/CD."
+from flask import Flask, render_template, request, jsonify
+
+app = Flask(__name__)
+
+tasks = []
+next_task_id = 1
+
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+@app.route("/api/tasks", methods=["GET"])
+def get_tasks():
+    return jsonify(tasks)
+
+
+@app.route("/api/tasks", methods=["POST"])
+def add_task():
+    global next_task_id
+
+    data = request.get_json() or {}
+    title = data.get("title", "").strip()
+
+    if not title:
+        return jsonify({"error": "Task title is required"}), 400
+
+    task = {
+        "id": next_task_id,
+        "title": title,
+        "completed": False
+    }
+
+    tasks.append(task)
+    next_task_id += 1
+
+    return jsonify(task), 201
+
+
+@app.route("/api/tasks/<int:task_id>", methods=["PUT"])
+def complete_task(task_id):
+    for task in tasks:
+        if task["id"] == task_id:
+            task["completed"] = not task["completed"]
+            return jsonify(task)
+
+    return jsonify({"error": "Task not found"}), 404
+
+
+@app.route("/api/tasks/<int:task_id>", methods=["DELETE"])
+def delete_task(task_id):
+    for task in tasks:
+        if task["id"] == task_id:
+            tasks.remove(task)
+            return jsonify({"message": "Task deleted"})
+
+    return jsonify({"error": "Task not found"}), 404
+
 
 if __name__ == "__main__":
-    print(greet("DevOps Intern"))
-print("Automatic Jenkins Pipeline Trigger Test")
-
-print("NEW CODE: Testing Git synchronization issue")
-
-print("DEV BRANCH: Testing branch mismatch in Jenkins")
-
-print("Jenkins is now monitoring the DEV branch!")
+    app.run(debug=True, host="0.0.0.0", port=5010)
