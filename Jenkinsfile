@@ -22,4 +22,18 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            echo 'SUCCESS: Pipeline completed successfully!'
+        }
+
+        failure {
+            echo 'FAILURE: Pipeline execution failed!'
+        }
+
+        always {
+            echo 'Pipeline execution has finished.'
+        }
+    }
 }
