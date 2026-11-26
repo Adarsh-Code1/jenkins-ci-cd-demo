@@ -1,23 +1,36 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(
+            name: 'APP_ENV',
+            choices: ['Development', 'Testing', 'Production'],
+            description: 'Select the application environment'
+        )
+
+        string(
+            name: 'APP_VERSION',
+            defaultValue: '1.0.0',
+            description: 'Enter the application version'
+        )
+    }
     environment {
         APP_NAME = 'Student-Task-Manager'
-        APP_ENV = 'Development'
         APP_PORT = '5010'
     }
 
     stages {
-
         stage('Environment Variables') {
             steps {
                 echo "Application: ${APP_NAME}"
-                echo "Environment: ${APP_ENV}"
+                echo "Selected Environment: ${params.APP_ENV}"
+                echo "Application Version: ${params.APP_VERSION}"
                 echo "Application Port: ${APP_PORT}"
                 echo "Jenkins Build Number: ${BUILD_NUMBER}"
                 echo "Jenkins Workspace: ${WORKSPACE}"
             }
         }
+
 
 
         stage('Use Docker Hub Credentials') {
