@@ -1,7 +1,24 @@
 pipeline {
     agent any
 
+    environment {
+        APP_NAME = 'Student-Task-Manager'
+        APP_ENV = 'Development'
+        APP_PORT = '5010'
+    }
+
     stages {
+
+stage('Environment Variables') {
+    steps {
+        echo "Application: ${APP_NAME}"
+        echo "Environment: ${APP_ENV}"
+        echo "Application Port: ${APP_PORT}"
+        echo "Jenkins Build Number: ${BUILD_NUMBER}"
+        echo "Jenkins Workspace: ${WORKSPACE}"
+    }
+}
+
         stage('Checkout') {
             steps {
                 echo 'Source code checkout completed'
