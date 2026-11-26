@@ -9,15 +9,33 @@ pipeline {
 
     stages {
 
-stage('Environment Variables') {
-    steps {
-        echo "Application: ${APP_NAME}"
-        echo "Environment: ${APP_ENV}"
-        echo "Application Port: ${APP_PORT}"
-        echo "Jenkins Build Number: ${BUILD_NUMBER}"
-        echo "Jenkins Workspace: ${WORKSPACE}"
-    }
-}
+        stage('Environment Variables') {
+            steps {
+                echo "Application: ${APP_NAME}"
+                echo "Environment: ${APP_ENV}"
+                echo "Application Port: ${APP_PORT}"
+                echo "Jenkins Build Number: ${BUILD_NUMBER}"
+                echo "Jenkins Workspace: ${WORKSPACE}"
+            }
+        }
+
+        stage('Use Stored Credential') {
+            steps {
+                withCredentials([string(
+                    credentialsId: 'practice-secret',
+                    variable: 'PRACTICE_TOKEN'
+                )]) {
+                    sh '''
+                        if [ -n "$PRACTICE_TOKEN" ]; then
+                            echo "SUCCESS: Jenkins credential loaded!"
+                        else
+                            echo "ERROR: Credential not found!"
+                            exit 1
+                        fi
+                    '''
+                }
+            }
+        }
 
         stage('Checkout') {
             steps {
