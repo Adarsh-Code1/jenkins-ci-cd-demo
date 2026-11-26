@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -14,6 +15,7 @@ pipeline {
             description: 'Enter the application version'
         )
     }
+
     environment {
         APP_NAME = 'Student-Task-Manager'
         APP_PORT = '5010'
@@ -30,8 +32,6 @@ pipeline {
                 echo "Jenkins Workspace: ${WORKSPACE}"
             }
         }
-
-
 
         stage('Use Docker Hub Credentials') {
             steps {
@@ -76,6 +76,23 @@ pipeline {
         stage('Test') {
             steps {
                 sh '.venv/bin/python -m unittest -v'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh '''
+                    mkdir -p artifacts
+                    zip -r "artifacts/student-task-manager-${APP_VERSION}.zip" \
+                        app.py requirements.txt templates static
+                '''
+
+                archiveArtifacts(
+                    artifacts: 'artifacts/*.zip',
+                    fingerprint: true
+                )
+
+                echo 'Application packaged successfully!'
             }
         }
     }
