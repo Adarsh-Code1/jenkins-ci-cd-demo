@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -27,9 +28,28 @@ pipeline {
                 )]) {
                     sh '''
                         if [ -n "$PRACTICE_TOKEN" ]; then
-                            echo "SUCCESS: Jenkins credential loaded!"
+                            echo "SUCCESS: Jenkins secret text credential loaded!"
                         else
                             echo "ERROR: Credential not found!"
+                            exit 1
+                        fi
+                    '''
+                }
+            }
+        }
+
+        stage('Use Docker Hub Credentials') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-login',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                        if [ -n "$DOCKER_USER" ] && [ -n "$DOCKER_PASS" ]; then
+                            echo "SUCCESS: Docker Hub credentials loaded!"
+                        else
+                            echo "ERROR: Docker Hub credentials missing!"
                             exit 1
                         fi
                     '''
