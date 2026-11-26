@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -20,23 +19,6 @@ pipeline {
             }
         }
 
-        stage('Use Stored Credential') {
-            steps {
-                withCredentials([string(
-                    credentialsId: 'practice-secret',
-                    variable: 'PRACTICE_TOKEN'
-                )]) {
-                    sh '''
-                        if [ -n "$PRACTICE_TOKEN" ]; then
-                            echo "SUCCESS: Jenkins secret text credential loaded!"
-                        else
-                            echo "ERROR: Credential not found!"
-                            exit 1
-                        fi
-                    '''
-                }
-            }
-        }
 
         stage('Use Docker Hub Credentials') {
             steps {
